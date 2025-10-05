@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Video, Plus, Trash2, Loader2 } from "lucide-react"
+import { Video as VideoIcon, Plus, Trash2, Loader2 } from "lucide-react"
 import type { Video as VideoType } from "@/lib/supabase"
 
 export function VideosManager() {
@@ -18,14 +18,17 @@ export function VideosManager() {
   // Load videos on component mount
   useEffect(() => {
     const loadVideos = async () => {
+      setIsLoadingVideos(true)
       try {
         const response = await fetch('/api/videos')
         const data = await response.json()
-        if (data.data) {
+        if (data?.data) {
           setVideos(data.data)
         }
       } catch (error) {
         console.error('Error loading videos:', error)
+      } finally {
+        setIsLoadingVideos(false)
       }
     }
     loadVideos()
@@ -46,7 +49,9 @@ export function VideosManager() {
 
       if (response.ok) {
         const data = await response.json()
-        setVideos([...videos, data.data])
+        if (data?.data) {
+          setVideos(prev => [...prev, data.data])
+        }
         setNewTitle("")
         setNewYoutubeUrl("")
         setNewCategory("general")
@@ -69,7 +74,7 @@ export function VideosManager() {
       })
 
       if (response.ok) {
-        setVideos(videos.filter(video => video.id !== id))
+        setVideos(prev => prev.filter(video => video.id !== id))
         alert("Video deleted successfully!")
       } else {
         alert("Error deleting video. Please try again.")
@@ -80,44 +85,12 @@ export function VideosManager() {
       setIsLoadingVideos(false)
     }
   }
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Video, Plus, Trash2, Loader2 } from "lucide-react"
-
-export function VideosManager() {
-  const { videos, addVideo, deleteVideo, isLoadingVideos } = useContent()
-  const [newTitle, setNewTitle] = useState("")
-  const [newUrl, setNewUrl] = useState("")
-
-  const handleAdd = async () => {
-    if (newTitle && newUrl) {
-      try {
-        await addVideo(newTitle, newUrl)
-        setNewTitle("")
-        setNewUrl("")
-        alert("Video added successfully!")
-      } catch (error) {
-        alert("Error adding video. Please try again.")
-      }
-    }
-  }
-
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteVideo(id)
-      alert("Video deleted successfully!")
-    } catch (error) {
-      alert("Error deleting video. Please try again.")
-    }
-  }
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Video className="w-5 h-5" />
+          <VideoIcon className="w-5 h-5" />
           YouTube Videos
         </CardTitle>
         <CardDescription>Manage YouTube videos displayed on the site</CardDescription>
@@ -125,17 +98,21 @@ export function VideosManager() {
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <h3 className="font-medium">Current Videos</h3>
+          {videos.length === 0 && (
+            <p className="text-sm text-muted-foreground">No videos yet.</p>
+          )}
           {videos.map((video) => (
             <div key={video.id} className="flex items-center gap-4 p-4 bg-vintage-tan/10 rounded-lg">
-              <div className="flex-1">
-                <p className="font-medium">{video.title}</p>
-                <p className="text-sm text-muted-foreground">{video.youtube_url}</p>
+              <div className="flex-1 overflow-hidden">
+                <p className="font-medium truncate">{video.title}</p>
+                <p className="text-sm text-muted-foreground truncate">{video.youtube_url}</p>
               </div>
-              <Button 
-                variant="destructive" 
-                size="icon" 
+              <Button
+                variant="destructive"
+                size="icon"
                 onClick={() => handleDelete(video.id)}
                 disabled={isLoadingVideos}
+                aria-label={`Delete ${video.title}`}
               >
                 {isLoadingVideos ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -165,15 +142,30 @@ export function VideosManager() {
               id="video-url"
               type="url"
               placeholder="https://www.youtube.com/watch?v=..."
-              value={newUrl}
-              onChange={(e) => setNewUrl(e.target.value)}
+              value={newYoutubeUrl}
+              onChange={(e) => setNewYoutubeUrl(e.target.value)}
               disabled={isLoadingVideos}
             />
           </div>
-          <Button 
-            onClick={handleAdd} 
+          <div>
+            <Label htmlFor="video-category">Category</Label>
+            <select
+              id="video-category"
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              disabled={isLoadingVideos}
+            >
+              <option value="general">General</option>
+              <option value="music">Music</option>
+              <option value="news">News</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <Button
+            onClick={handleAdd}
             className="w-full"
-            disabled={isLoadingVideos || !newTitle || !newUrl}
+            disabled={isLoadingVideos || !newTitle || !newYoutubeUrl}
           >
             {isLoadingVideos ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />

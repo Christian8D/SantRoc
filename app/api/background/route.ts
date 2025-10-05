@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
 // GET - Fetch all background images
 export async function GET() {
@@ -37,14 +38,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Image URL is required' }, { status: 400 })
     }
 
+    // Use admin client for write operations to bypass RLS
     // First, deactivate all existing background images
-    await supabase
+    await supabaseAdmin
       .from('background_images')
       .update({ is_active: false })
       .neq('id', '00000000-0000-0000-0000-000000000000') // Update all records
 
     // Then create the new active background image
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('background_images')
       .insert([{ image_url, is_active: true }])
       .select()

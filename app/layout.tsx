@@ -2,6 +2,7 @@ import type React from "react"
 import "./globals.css"
 import { Playfair_Display, Inter } from "next/font/google"
 import { ClientAuthProvider } from "@/components/providers/client-auth-provider"
+import { ContentProvider } from "@/lib/content-context"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -29,7 +30,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <body>
-        <ClientAuthProvider>{children}</ClientAuthProvider>
+        <ClientAuthProvider>
+          <ContentProvider>{children}</ContentProvider>
+        </ClientAuthProvider>
       </body>
     </html>
   )

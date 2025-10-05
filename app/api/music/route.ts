@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
 // GET - Fetch all music links
 export async function GET() {
@@ -47,7 +48,8 @@ export async function POST(request: NextRequest) {
 
     const order_index = lastItem ? lastItem.order_index + 1 : 1
 
-    const { data, error } = await supabase
+    // Use admin client for write operations to bypass RLS
+    const { data, error } = await supabaseAdmin
       .from('music_links')
       .insert([{ title, url, order_index }])
       .select()
@@ -81,7 +83,8 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 })
     }
 
-    const { error } = await supabase
+    // Use admin client for write operations to bypass RLS
+    const { error } = await supabaseAdmin
       .from('music_links')
       .delete()
       .eq('id', id)

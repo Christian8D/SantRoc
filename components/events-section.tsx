@@ -1,11 +1,20 @@
+"use client"
+
 import { Calendar } from "lucide-react"
-import type { Event } from "@/lib/supabase"
+import { useContent } from "@/lib/content-context"
 
-interface EventsSectionProps {
-  events: Event[]
-}
+export function EventsSection() {
+  const { events, isLoadingEvents } = useContent()
 
-export function EventsSection({ events }: EventsSectionProps) {
+  if (isLoadingEvents) {
+    return (
+      <section id="events" className="py-20 bg-vintage-cream">
+        <div className="container mx-auto px-4 text-center">
+          <div className="text-vintage-dark text-xl">Loading events...</div>
+        </div>
+      </section>
+    )
+  }
   return (
     <section id="events" className="py-20 bg-vintage-cream">
       <div className="container mx-auto px-4">

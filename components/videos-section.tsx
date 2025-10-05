@@ -1,16 +1,25 @@
-import { Video } from "lucide-react"
-import type { Video as VideoType } from "@/lib/supabase"
+"use client"
 
-interface VideosSectionProps {
-  videos: VideoType[]
-}
+import { Video } from "lucide-react"
+import { useContent } from "@/lib/content-context"
 
 function getYouTubeEmbedUrl(url: string) {
   const videoId = url.split("v=")[1]?.split("&")[0]
   return `https://www.youtube.com/embed/${videoId}`
 }
 
-export function VideosSection({ videos }: VideosSectionProps) {
+export function VideosSection() {
+  const { videos, isLoadingVideos } = useContent()
+
+  if (isLoadingVideos) {
+    return (
+      <section id="videos" className="py-20 bg-vintage-dark">
+        <div className="container mx-auto px-4 text-center">
+          <div className="text-vintage-cream text-xl">Loading videos...</div>
+        </div>
+      </section>
+    )
+  }
   return (
     <section id="videos" className="py-20 bg-vintage-dark">
       <div className="container mx-auto px-4">

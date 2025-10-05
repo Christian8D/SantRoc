@@ -1,11 +1,20 @@
+"use client"
+
 import { Music } from "lucide-react"
-import type { MusicLink } from "@/lib/supabase"
+import { useContent } from "@/lib/content-context"
 
-interface MusicSectionProps {
-  musicLinks: MusicLink[]
-}
+export function MusicSection() {
+  const { musicLinks, isLoadingMusic } = useContent()
 
-export function MusicSection({ musicLinks }: MusicSectionProps) {
+  if (isLoadingMusic) {
+    return (
+      <section id="music" className="py-20 bg-vintage-cream">
+        <div className="container mx-auto px-4 text-center">
+          <div className="text-vintage-dark text-xl">Loading music...</div>
+        </div>
+      </section>
+    )
+  }
   return (
     <section id="music" className="py-20 bg-vintage-cream">
       <div className="container mx-auto px-4">

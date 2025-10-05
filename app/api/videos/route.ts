@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
 // GET - Fetch all videos
 export async function GET() {
@@ -37,7 +38,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Title and YouTube URL are required' }, { status: 400 })
     }
 
-    const { data, error } = await supabase
+    // Use admin client for write operations to bypass RLS
+    const { data, error } = await supabaseAdmin
       .from('videos')
       .insert([{ title, youtube_url, category }])
       .select()
@@ -71,7 +73,8 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 })
     }
 
-    const { error } = await supabase
+    // Use admin client for write operations to bypass RLS
+    const { error } = await supabaseAdmin
       .from('videos')
       .delete()
       .eq('id', id)

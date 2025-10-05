@@ -1,10 +1,17 @@
-interface HeroSectionProps {
-  backgroundImage?: string | null
-  heroTitle: string
-  heroDescription: string
-}
+"use client"
 
-export function HeroSection({ backgroundImage, heroTitle, heroDescription }: HeroSectionProps) {
+import { useContent } from "@/lib/content-context"
+
+export function HeroSection() {
+  const { backgroundImage, heroTitle, heroDescription, isLoading } = useContent()
+
+  if (isLoading) {
+    return (
+      <section className="relative min-h-screen flex items-center justify-center">
+        <div className="text-vintage-tan text-xl">Loading...</div>
+      </section>
+    )
+  }
   return (
     <section className="relative min-h-screen flex items-center justify-center grain-texture">
       {/* Background Image */}
@@ -18,7 +25,11 @@ export function HeroSection({ backgroundImage, heroTitle, heroDescription }: Her
         <h1 className="groovy-title text-7xl md:text-9xl text-vintage-tan mb-12">{heroTitle}</h1>
 
         <div className="max-w-3xl mx-auto bg-vintage-cream/95 backdrop-blur-sm p-8 md:p-12 rounded-lg shadow-2xl">
-          <p className="text-vintage-dark text-lg md:text-xl leading-relaxed font-serif">{heroDescription}</p>
+          <div 
+            className="text-vintage-dark text-lg md:text-xl leading-relaxed font-serif whitespace-pre-wrap"
+          >
+            {heroDescription}
+          </div>
         </div>
       </div>
     </section>
