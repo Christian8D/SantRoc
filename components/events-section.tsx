@@ -1,11 +1,11 @@
-"use client"
-
-import { useContent } from "@/lib/content-context"
 import { Calendar } from "lucide-react"
+import type { Event } from "@/lib/supabase"
 
-export function EventsSection() {
-  const { events } = useContent()
+interface EventsSectionProps {
+  events: Event[]
+}
 
+export function EventsSection({ events }: EventsSectionProps) {
   return (
     <section id="events" className="py-20 bg-vintage-cream">
       <div className="container mx-auto px-4">
@@ -24,8 +24,8 @@ export function EventsSection() {
               <p className="text-vintage-brown mb-4">{event.description}</p>
               <div className="flex items-center gap-2 text-sm text-vintage-dark">
                 <Calendar className="w-4 h-4" />
-                <time dateTime={event.eventDate}>
-                  {new Date(event.eventDate).toLocaleDateString("en-US", {
+                <time dateTime={event.event_date}>
+                  {new Date(event.event_date).toLocaleDateString("en-US", {
                     weekday: "long",
                     year: "numeric",
                     month: "long",

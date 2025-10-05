@@ -1,11 +1,11 @@
-"use client"
-
-import { useContent } from "@/lib/content-context"
 import { Music } from "lucide-react"
+import type { MusicLink } from "@/lib/supabase"
 
-export function MusicSection() {
-  const { musicLinks } = useContent()
+interface MusicSectionProps {
+  musicLinks: MusicLink[]
+}
 
+export function MusicSection({ musicLinks }: MusicSectionProps) {
   return (
     <section id="music" className="py-20 bg-vintage-cream">
       <div className="container mx-auto px-4">

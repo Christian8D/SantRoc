@@ -1,16 +1,16 @@
-"use client"
+interface HeroSectionProps {
+  backgroundImage?: string | null
+  heroTitle: string
+  heroDescription: string
+}
 
-import { useContent } from "@/lib/content-context"
-
-export function HeroSection() {
-  const { backgroundImage, heroTitle, heroDescription } = useContent()
-
+export function HeroSection({ backgroundImage, heroTitle, heroDescription }: HeroSectionProps) {
   return (
     <section className="relative min-h-screen flex items-center justify-center grain-texture">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center vintage-overlay"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
+        style={{ backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined }}
       />
 
       {/* Content */}
