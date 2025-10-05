@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 
 // GET - Fetch site content
 export async function GET() {
   try {
+    const supabase = createServerClient()
     const { data, error } = await supabase
       .from('site_content')
       .select('*')
@@ -22,6 +23,14 @@ export async function GET() {
 // PUT - Update site content
 export async function PUT(request: NextRequest) {
   try {
+    const supabase = createServerClient()
+    
+    // Check if user is authenticated
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { section, content } = await request.json()
 
     if (!section || !content) {

@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 
 // GET - Fetch all videos
 export async function GET() {
   try {
+    const supabase = createServerClient()
     const { data, error } = await supabase
       .from('videos')
       .select('*')
@@ -22,6 +23,14 @@ export async function GET() {
 // POST - Create new video
 export async function POST(request: NextRequest) {
   try {
+    const supabase = createServerClient()
+    
+    // Check if user is authenticated
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { title, youtube_url, category = 'general' } = await request.json()
 
     if (!title || !youtube_url) {
@@ -47,6 +56,14 @@ export async function POST(request: NextRequest) {
 // DELETE - Delete video
 export async function DELETE(request: NextRequest) {
   try {
+    const supabase = createServerClient()
+    
+    // Check if user is authenticated
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 

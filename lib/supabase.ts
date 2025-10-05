@@ -1,9 +1,24 @@
 import { createClient } from '@supabase/supabase-js'
+import { cookies } from 'next/headers'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
+// Client-side Supabase client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+// Server-side Supabase client with cookies for authentication
+export function createServerClient() {
+  const cookieStore = cookies()
+  
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      get(name: string) {
+        return cookieStore.get(name)?.value
+      },
+    },
+  })
+}
 
 // Database types
 export interface BackgroundImage {
