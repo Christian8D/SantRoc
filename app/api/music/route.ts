@@ -1,0 +1,80 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { supabase } from '@/lib/supabase'
+
+// GET - Fetch all music links
+export async function GET() {
+  try {
+    const { data, error } = await supabase
+      .from('music_links')
+      .select('*')
+      .order('order_index', { ascending: true })
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ data })
+  } catch (error) {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
+// POST - Create new music link
+export async function POST(request: NextRequest) {
+  try {
+    const { title, url } = await request.json()
+
+    if (!title || !url) {
+      return NextResponse.json({ error: 'Title and URL are required' }, { status: 400 })
+    }
+
+    // Get the highest order_index and increment it
+    const { data: lastItem } = await supabase
+      .from('music_links')
+      .select('order_index')
+      .order('order_index', { ascending: false })
+      .limit(1)
+      .single()
+
+    const order_index = lastItem ? lastItem.order_index + 1 : 1
+
+    const { data, error } = await supabase
+      .from('music_links')
+      .insert([{ title, url, order_index }])
+      .select()
+      .single()
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ data })
+  } catch (error) {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
+// DELETE - Delete music link
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+
+    if (!id) {
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 })
+    }
+
+    const { error } = await supabase
+      .from('music_links')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}

@@ -1,0 +1,23 @@
+import Link from "next/link"
+import { Home } from "lucide-react"
+
+export function AdminNav() {
+  return (
+    <nav className="bg-vintage-dark border-b border-vintage-brown">
+      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-6">
+          <Link href="/admin" className="groovy-title text-2xl text-vintage-tan">
+            Sant Roc Admin
+          </Link>
+        </div>
+        <Link
+          href="/"
+          className="flex items-center gap-2 px-4 py-2 bg-vintage-tan text-vintage-dark rounded hover:bg-vintage-brown hover:text-vintage-cream transition-colors"
+        >
+          <Home className="w-4 h-4" />
+          View Site
+        </Link>
+      </div>
+    </nav>
+  )
+}
