@@ -1,7 +1,85 @@
 "use client"
 
-import { useState } from "react"
-import { useContent } from "@/lib/content-context"
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Video, Plus, Trash2, Loader2 } from "lucide-react"
+import type { Video as VideoType } from "@/lib/supabase"
+
+export function VideosManager() {
+  const [videos, setVideos] = useState<VideoType[]>([])
+  const [isLoadingVideos, setIsLoadingVideos] = useState(false)
+  const [newTitle, setNewTitle] = useState("")
+  const [newYoutubeUrl, setNewYoutubeUrl] = useState("")
+  const [newCategory, setNewCategory] = useState("general")
+
+  // Load videos on component mount
+  useEffect(() => {
+    const loadVideos = async () => {
+      try {
+        const response = await fetch('/api/videos')
+        const data = await response.json()
+        if (data.data) {
+          setVideos(data.data)
+        }
+      } catch (error) {
+        console.error('Error loading videos:', error)
+      }
+    }
+    loadVideos()
+  }, [])
+
+  const handleAdd = async () => {
+    if (!newTitle || !newYoutubeUrl) return
+
+    setIsLoadingVideos(true)
+    try {
+      const response = await fetch('/api/videos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: newTitle, youtube_url: newYoutubeUrl, category: newCategory }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setVideos([...videos, data.data])
+        setNewTitle("")
+        setNewYoutubeUrl("")
+        setNewCategory("general")
+        alert("Video added successfully!")
+      } else {
+        alert("Error adding video. Please try again.")
+      }
+    } catch (error) {
+      alert("Error adding video. Please try again.")
+    } finally {
+      setIsLoadingVideos(false)
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    setIsLoadingVideos(true)
+    try {
+      const response = await fetch(`/api/videos?id=${id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        setVideos(videos.filter(video => video.id !== id))
+        alert("Video deleted successfully!")
+      } else {
+        alert("Error deleting video. Please try again.")
+      }
+    } catch (error) {
+      alert("Error deleting video. Please try again.")
+    } finally {
+      setIsLoadingVideos(false)
+    }
+  }
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"

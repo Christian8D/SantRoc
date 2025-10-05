@@ -1,7 +1,83 @@
 "use client"
 
-import { useState } from "react"
-import { useContent } from "@/lib/content-context"
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Music, Plus, Trash2, Loader2 } from "lucide-react"
+import type { MusicLink } from "@/lib/supabase"
+
+export function MusicManager() {
+  const [musicLinks, setMusicLinks] = useState<MusicLink[]>([])
+  const [isLoadingMusic, setIsLoadingMusic] = useState(false)
+  const [newTitle, setNewTitle] = useState("")
+  const [newUrl, setNewUrl] = useState("")
+
+  // Load music links on component mount
+  useEffect(() => {
+    const loadMusicLinks = async () => {
+      try {
+        const response = await fetch('/api/music')
+        const data = await response.json()
+        if (data.data) {
+          setMusicLinks(data.data)
+        }
+      } catch (error) {
+        console.error('Error loading music links:', error)
+      }
+    }
+    loadMusicLinks()
+  }, [])
+
+  const handleAdd = async () => {
+    if (!newTitle || !newUrl) return
+
+    setIsLoadingMusic(true)
+    try {
+      const response = await fetch('/api/music', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: newTitle, url: newUrl }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setMusicLinks([...musicLinks, data.data])
+        setNewTitle("")
+        setNewUrl("")
+        alert("Music link added successfully!")
+      } else {
+        alert("Error adding music link. Please try again.")
+      }
+    } catch (error) {
+      alert("Error adding music link. Please try again.")
+    } finally {
+      setIsLoadingMusic(false)
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    setIsLoadingMusic(true)
+    try {
+      const response = await fetch(`/api/music?id=${id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        setMusicLinks(musicLinks.filter(link => link.id !== id))
+        alert("Music link deleted successfully!")
+      } else {
+        alert("Error deleting music link. Please try again.")
+      }
+    } catch (error) {
+      alert("Error deleting music link. Please try again.")
+    } finally {
+      setIsLoadingMusic(false)
+    }
+  }
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"

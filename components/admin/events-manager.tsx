@@ -1,7 +1,90 @@
 "use client"
 
-import { useState } from "react"
-import { useContent } from "@/lib/content-context"
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Calendar, Plus, Trash2, Loader2 } from "lucide-react"
+import type { Event } from "@/lib/supabase"
+
+export function EventsManager() {
+  const [events, setEvents] = useState<Event[]>([])
+  const [isLoadingEvents, setIsLoadingEvents] = useState(false)
+  const [newTitle, setNewTitle] = useState("")
+  const [newDescription, setNewDescription] = useState("")
+  const [newEventDate, setNewEventDate] = useState("")
+
+  // Load events on component mount
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        const response = await fetch('/api/events')
+        const data = await response.json()
+        if (data.data) {
+          setEvents(data.data)
+        }
+      } catch (error) {
+        console.error('Error loading events:', error)
+      }
+    }
+    loadEvents()
+  }, [])
+
+  const handleAdd = async () => {
+    if (!newTitle) return
+
+    setIsLoadingEvents(true)
+    try {
+      const response = await fetch('/api/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          title: newTitle, 
+          description: newDescription || null, 
+          event_date: newEventDate || null 
+        }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setEvents([...events, data.data])
+        setNewTitle("")
+        setNewDescription("")
+        setNewEventDate("")
+        alert("Event added successfully!")
+      } else {
+        alert("Error adding event. Please try again.")
+      }
+    } catch (error) {
+      alert("Error adding event. Please try again.")
+    } finally {
+      setIsLoadingEvents(false)
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    setIsLoadingEvents(true)
+    try {
+      const response = await fetch(`/api/events?id=${id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        setEvents(events.filter(event => event.id !== id))
+        alert("Event deleted successfully!")
+      } else {
+        alert("Error deleting event. Please try again.")
+      }
+    } catch (error) {
+      alert("Error deleting event. Please try again.")
+    } finally {
+      setIsLoadingEvents(false)
+    }
+  }
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"

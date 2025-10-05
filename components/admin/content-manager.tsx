@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useContent } from "@/lib/content-context"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,31 +9,56 @@ import { Textarea } from "@/components/ui/textarea"
 import { FileText, Save, Loader2 } from "lucide-react"
 
 export function ContentManager() {
-  const { 
-    heroTitle, 
-    setHeroTitle, 
-    heroDescription, 
-    setHeroDescription, 
-    isLoadingContent 
-  } = useContent()
+  const [heroTitle, setHeroTitle] = useState("")
+  const [heroDescription, setHeroDescription] = useState("")
+  const [isLoadingContent, setIsLoadingContent] = useState(false)
   
-  const [title, setTitle] = useState(heroTitle)
-  const [description, setDescription] = useState(heroDescription)
-
+  // Load current content on component mount
   useEffect(() => {
-    setTitle(heroTitle)
-    setDescription(heroDescription)
-  }, [heroTitle, heroDescription])
+    const loadContent = async () => {
+      try {
+        const response = await fetch('/api/content')
+        const data = await response.json()
+        if (data.data) {
+          data.data.forEach((item: any) => {
+            if (item.section === 'hero_title') {
+              setHeroTitle(item.content)
+            } else if (item.section === 'hero_description') {
+              setHeroDescription(item.content)
+            }
+          })
+        }
+      } catch (error) {
+        console.error('Error loading content:', error)
+      }
+    }
+    loadContent()
+  }, [])
 
   const handleSave = async () => {
+    setIsLoadingContent(true)
     try {
       await Promise.all([
-        setHeroTitle(title),
-        setHeroDescription(description)
+        fetch('/api/content', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ section: 'hero_title', content: heroTitle }),
+        }),
+        fetch('/api/content', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ section: 'hero_description', content: heroDescription }),
+        })
       ])
       alert("Content saved successfully!")
     } catch (error) {
       alert("Error saving content. Please try again.")
+    } finally {
+      setIsLoadingContent(false)
     }
   }
 
@@ -52,8 +76,8 @@ export function ContentManager() {
           <Label htmlFor="title">Hero Title</Label>
           <Input 
             id="title" 
-            value={title} 
-            onChange={(e) => setTitle(e.target.value)}
+            value={heroTitle} 
+            onChange={(e) => setHeroTitle(e.target.value)}
             disabled={isLoadingContent}
           />
         </div>
@@ -62,8 +86,8 @@ export function ContentManager() {
           <Label htmlFor="description">Hero Description</Label>
           <Textarea
             id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={heroDescription}
+            onChange={(e) => setHeroDescription(e.target.value)}
             rows={10}
             className="resize-none"
             disabled={isLoadingContent}

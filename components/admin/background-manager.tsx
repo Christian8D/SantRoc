@@ -1,7 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
-import { useContent } from "@/lib/content-context"
+import { useState, useRef, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,12 +8,32 @@ import { Label } from "@/components/ui/label"
 import { ImageIcon, Upload, Loader2, X } from "lucide-react"
 
 export function BackgroundManager() {
-  const { backgroundImage, setBackgroundImage, isLoadingBackground } = useContent()
+  const [backgroundImage, setBackgroundImage] = useState<string>("")
+  const [isLoadingBackground, setIsLoadingBackground] = useState(false)
   const [newImageUrl, setNewImageUrl] = useState("")
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Load current background image on component mount
+  useEffect(() => {
+    const loadBackgroundImage = async () => {
+      try {
+        const response = await fetch('/api/background')
+        const data = await response.json()
+        if (data.data && data.data.length > 0) {
+          const activeImage = data.data.find((img: any) => img.is_active)
+          if (activeImage) {
+            setBackgroundImage(activeImage.image_url)
+          }
+        }
+      } catch (error) {
+        console.error('Error loading background image:', error)
+      }
+    }
+    loadBackgroundImage()
+  }, [])
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -30,12 +49,27 @@ export function BackgroundManager() {
 
   const handleUrlUpdate = async () => {
     if (newImageUrl) {
+      setIsLoadingBackground(true)
       try {
-        await setBackgroundImage(newImageUrl)
-        setNewImageUrl("")
-        alert("Background image updated successfully!")
+        const response = await fetch('/api/background', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ image_url: newImageUrl }),
+        })
+
+        if (response.ok) {
+          setBackgroundImage(newImageUrl)
+          setNewImageUrl("")
+          alert("Background image updated successfully!")
+        } else {
+          alert("Error updating background image. Please try again.")
+        }
       } catch (error) {
         alert("Error updating background image. Please try again.")
+      } finally {
+        setIsLoadingBackground(false)
       }
     }
   }
@@ -56,13 +90,26 @@ export function BackgroundManager() {
       const result = await response.json()
 
       if (response.ok && result.url) {
-        await setBackgroundImage(result.url)
-        setSelectedFile(null)
-        setPreviewUrl(null)
-        if (fileInputRef.current) {
-          fileInputRef.current.value = ''
+        // Now set the uploaded image as background
+        const backgroundResponse = await fetch('/api/background', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ image_url: result.url }),
+        })
+
+        if (backgroundResponse.ok) {
+          setBackgroundImage(result.url)
+          setSelectedFile(null)
+          setPreviewUrl(null)
+          if (fileInputRef.current) {
+            fileInputRef.current.value = ''
+          }
+          alert("Image uploaded and set as background successfully!")
+        } else {
+          alert("Image uploaded but failed to set as background. Please try again.")
         }
-        alert("Image uploaded and set as background successfully!")
       } else {
         alert(result.error || "Error uploading image. Please try again.")
       }
