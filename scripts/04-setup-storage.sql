@@ -15,23 +15,30 @@ ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public read access for SantRoc images" ON storage.objects
 FOR SELECT USING (bucket_id = 'SantRoc');
 
--- Policy to allow authenticated users to upload background images
+-- Policy to allow authenticated users to upload SantRoc images
 CREATE POLICY "Authenticated users can upload SantRoc images" ON storage.objects
 FOR INSERT WITH CHECK (
   bucket_id = 'SantRoc' 
   AND auth.role() = 'authenticated'
 );
 
--- Policy to allow authenticated users to update background images
+-- Policy to allow authenticated users to update SantRoc images
 CREATE POLICY "Authenticated users can update SantRoc images" ON storage.objects
 FOR UPDATE USING (
   bucket_id = 'SantRoc' 
   AND auth.role() = 'authenticated'
 );
 
--- Policy to allow authenticated users to delete background images
+-- Policy to allow authenticated users to delete SantRoc images
 CREATE POLICY "Authenticated users can delete SantRoc images" ON storage.objects
 FOR DELETE USING (
+  bucket_id = 'SantRoc' 
+  AND auth.role() = 'authenticated'
+);
+
+-- Additional policy to allow authenticated users to manage any objects in SantRoc bucket
+CREATE POLICY "Authenticated users can manage SantRoc bucket" ON storage.objects
+FOR ALL USING (
   bucket_id = 'SantRoc' 
   AND auth.role() = 'authenticated'
 );
