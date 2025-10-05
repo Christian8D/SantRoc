@@ -4,6 +4,7 @@ import { supabaseAdmin } from '@/lib/supabase-admin'
 
 // GET - Fetch all background images
 export async function GET() {
+  
   try {
     const supabase = await createServerSupabaseClient()
     const { data, error } = await supabase
