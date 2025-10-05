@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
 
 // GET - Fetch all videos
 export async function GET() {
   try {
-    const supabase = createServerClient()
+    const supabase = createServerSupabaseClient()
     const { data, error } = await supabase
       .from('videos')
       .select('*')
@@ -23,7 +23,7 @@ export async function GET() {
 // POST - Create new video
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createServerClient()
+    const supabase = createServerSupabaseClient()
     
     // Check if user is authenticated
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
 // DELETE - Delete video
 export async function DELETE(request: NextRequest) {
   try {
-    const supabase = createServerClient()
+    const supabase = createServerSupabaseClient()
     
     // Check if user is authenticated
     const { data: { user }, error: authError } = await supabase.auth.getUser()
