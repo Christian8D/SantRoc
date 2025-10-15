@@ -62,3 +62,72 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+
+// PUT - Update background positioning settings
+export async function PUT(request: NextRequest) {
+  try {
+    const supabase = await createServerSupabaseClient()
+
+    // Check if user is authenticated
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      console.error('Auth error:', authError)
+      return NextResponse.json({ error: 'Unauthorized', details: authError?.message }, { status: 401 })
+    }
+
+    const { position, size, repeat } = await request.json()
+
+    // Update background positioning in the active background image record
+    const { data, error } = await supabaseAdmin
+      .from('background_images')
+      .update({ 
+        background_position: position,
+        background_size: size,
+        background_repeat: repeat,
+        updated_at: new Date().toISOString()
+      })
+      .eq('is_active', true)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Database error:', error)
+      return NextResponse.json({ error: error.message, details: error }, { status: 500 })
+    }
+
+    return NextResponse.json({ data })
+  } catch (error) {
+    console.error('Unexpected error:', error)
+    return NextResponse.json({ error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 })
+  }
+}
+
+// DELETE - Delete background image
+export async function DELETE(request: NextRequest) {
+  try {
+    const supabase = await createServerSupabaseClient()
+
+    // Check if user is authenticated
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      console.error('Auth error:', authError)
+      return NextResponse.json({ error: 'Unauthorized', details: authError?.message }, { status: 401 })
+    }
+
+    // Use admin client for write operations to bypass RLS
+    const { error } = await supabaseAdmin
+      .from('background_images')
+      .delete()
+      .eq('is_active', true)
+
+    if (error) {
+      console.error('Database error:', error)
+      return NextResponse.json({ error: error.message, details: error }, { status: 500 })
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Unexpected error:', error)
+    return NextResponse.json({ error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 })
+  }
+}

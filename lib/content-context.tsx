@@ -6,6 +6,9 @@ import { BackgroundImage, SiteContent, MusicLink, Video, Event } from "@/lib/sup
 type ContentContextType = {
   // Background
   backgroundImage: string
+  backgroundPosition: string
+  backgroundSize: string
+  backgroundRepeat: string
   setBackgroundImage: (url: string) => Promise<void>
   isLoadingBackground: boolean
 
@@ -43,6 +46,9 @@ const ContentContext = createContext<ContentContextType | undefined>(undefined)
 export function ContentProvider({ children }: { children: ReactNode }) {
   // State
   const [backgroundImage, setBackgroundImageState] = useState("")
+  const [backgroundPosition, setBackgroundPosition] = useState("center")
+  const [backgroundSize, setBackgroundSize] = useState("cover")
+  const [backgroundRepeat, setBackgroundRepeat] = useState("no-repeat")
   const [heroTitle, setHeroTitleState] = useState("")
   const [heroDescription, setHeroDescriptionState] = useState("")
   const [musicLinks, setMusicLinks] = useState<MusicLink[]>([])
@@ -66,6 +72,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const loadInitialData = async () => {
     await Promise.all([
       loadBackgroundImage(),
+      loadBackgroundSettings(),
       loadSiteContent(),
       loadMusicLinks(),
       loadVideos(),
@@ -76,16 +83,44 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   // Background functions
   const loadBackgroundImage = async () => {
     try {
+      console.log('Loading background image...')
       const response = await fetch('/api/background')
       const { data } = await response.json()
+      console.log('Background API response:', data)
+
       if (data && data.length > 0) {
         const activeImage = data.find((img: BackgroundImage) => img.is_active)
+        console.log('Active background image found:', activeImage)
         if (activeImage) {
           setBackgroundImageState(activeImage.image_url)
+          console.log('Background image URL set to:', activeImage.image_url)
         }
+      } else {
+        console.log('No background images found in database')
       }
     } catch (error) {
       console.error('Error loading background image:', error)
+    }
+  }
+
+  const loadBackgroundSettings = async () => {
+    try {
+      console.log('Loading background settings...')
+      const response = await fetch('/api/background')
+      const { data } = await response.json()
+      console.log('Background settings API response:', data)
+
+      if (data && data.length > 0) {
+        const activeImage = data.find((img: any) => img.is_active)
+        if (activeImage) {
+          console.log('Active background image with settings:', activeImage)
+          setBackgroundPosition(activeImage.background_position || 'center')
+          setBackgroundSize(activeImage.background_size || 'cover')
+          setBackgroundRepeat(activeImage.background_repeat || 'no-repeat')
+        }
+      }
+    } catch (error) {
+      console.error('Error loading background settings:', error)
     }
   }
 
@@ -98,7 +133,12 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({ image_url: url })
       })
       if (response.ok) {
+        const { data } = await response.json()
         setBackgroundImageState(url)
+        // Update positioning settings from the new background image
+        setBackgroundPosition(data.background_position || 'center')
+        setBackgroundSize(data.background_size || 'cover')
+        setBackgroundRepeat(data.background_repeat || 'no-repeat')
       }
     } catch (error) {
       console.error('Error updating background image:', error)
@@ -304,6 +344,9 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     <ContentContext.Provider
       value={{
         backgroundImage,
+        backgroundPosition,
+        backgroundSize,
+        backgroundRepeat,
         setBackgroundImage,
         isLoadingBackground,
         heroTitle,
