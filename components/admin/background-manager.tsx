@@ -19,6 +19,8 @@ export function BackgroundManager() {
   const [backgroundPosition, setBackgroundPosition] = useState("center")
   const [backgroundSize, setBackgroundSize] = useState("cover")
   const [backgroundRepeat, setBackgroundRepeat] = useState("no-repeat")
+  const [horizontalPosition, setHorizontalPosition] = useState("center")
+  const [verticalPosition, setVerticalPosition] = useState("center")
 
   // Load current background image and settings on component mount
   useEffect(() => {
@@ -34,6 +36,18 @@ export function BackgroundManager() {
             setBackgroundPosition(activeImage.background_position || 'center')
             setBackgroundSize(activeImage.background_size || 'cover')
             setBackgroundRepeat(activeImage.background_repeat || 'no-repeat')
+            
+            // Load separate horizontal and vertical positions, fallback to parsing combined position
+            if (activeImage.horizontal_position && activeImage.vertical_position) {
+              setHorizontalPosition(activeImage.horizontal_position)
+              setVerticalPosition(activeImage.vertical_position)
+            } else {
+              // Fallback: Parse horizontal and vertical positions from combined position
+              const position = activeImage.background_position || 'center'
+              const [horizontal, vertical] = position.split(' ')
+              setHorizontalPosition(horizontal || 'center')
+              setVerticalPosition(vertical || 'center')
+            }
           }
         }
       } catch (error) {
@@ -87,6 +101,18 @@ export function BackgroundManager() {
           setBackgroundPosition(backgroundData.data.background_position || 'center')
           setBackgroundSize(backgroundData.data.background_size || 'cover')
           setBackgroundRepeat(backgroundData.data.background_repeat || 'no-repeat')
+          
+          // Load separate horizontal and vertical positions, fallback to parsing combined position
+          if (backgroundData.data.horizontal_position && backgroundData.data.vertical_position) {
+            setHorizontalPosition(backgroundData.data.horizontal_position)
+            setVerticalPosition(backgroundData.data.vertical_position)
+          } else {
+            // Fallback: Parse horizontal and vertical positions from combined position
+            const position = backgroundData.data.background_position || 'center'
+            const [horizontal, vertical] = position.split(' ')
+            setHorizontalPosition(horizontal || 'center')
+            setVerticalPosition(vertical || 'center')
+          }
           setSelectedFile(null)
           setPreviewUrl(null)
           if (fileInputRef.current) {
@@ -117,13 +143,20 @@ export function BackgroundManager() {
   const saveBackgroundSettings = async () => {
     setIsLoadingBackground(true)
     try {
+      // Combine horizontal and vertical positions
+      const combinedPosition = horizontalPosition === verticalPosition 
+        ? horizontalPosition 
+        : `${horizontalPosition} ${verticalPosition}`
+      
       const response = await fetch('/api/background', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          position: backgroundPosition,
+          position: combinedPosition,
+          horizontalPosition: horizontalPosition,
+          verticalPosition: verticalPosition,
           size: backgroundSize,
           repeat: backgroundRepeat
         }),
@@ -157,7 +190,9 @@ export function BackgroundManager() {
             className="aspect-video rounded-lg overflow-hidden border-2 border-vintage-brown relative"
             style={{
               backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'linear-gradient(135deg, #8b7355 0%, #c4a574 100%)',
-              backgroundPosition: backgroundPosition,
+              backgroundPosition: horizontalPosition === verticalPosition 
+                ? horizontalPosition 
+                : `${horizontalPosition} ${verticalPosition}`,
               backgroundSize: backgroundSize,
               backgroundRepeat: backgroundRepeat
             }}
@@ -176,24 +211,39 @@ export function BackgroundManager() {
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="background-position">Position</Label>
+              <Label htmlFor="horizontal-position">Horizontal Position</Label>
               <select
-                id="background-position"
-                value={backgroundPosition}
-                onChange={(e) => setBackgroundPosition(e.target.value)}
+                id="horizontal-position"
+                value={horizontalPosition}
+                onChange={(e) => setHorizontalPosition(e.target.value)}
                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               >
-                <option value="center">Center</option>
-                <option value="top">Top</option>
-                <option value="bottom">Bottom</option>
                 <option value="left">Left</option>
+                <option value="center">Center</option>
                 <option value="right">Right</option>
-                <option value="top left">Top Left</option>
-                <option value="top right">Top Right</option>
-                <option value="bottom left">Bottom Left</option>
-                <option value="bottom right">Bottom Right</option>
               </select>
             </div>
+
+            <div>
+              <Label htmlFor="vertical-position">Vertical Position</Label>
+              <select
+                id="vertical-position"
+                value={verticalPosition}
+                onChange={(e) => setVerticalPosition(e.target.value)}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              >
+                <option value="top">Top</option>
+                <option value="center">Center</option>
+                <option value="bottom">Bottom</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <Label className="text-sm font-medium">Current Position: {horizontalPosition === verticalPosition ? horizontalPosition : `${horizontalPosition} ${verticalPosition}`}</Label>
+            </div>
+          </div>
 
             <div>
               <Label htmlFor="background-size">Size</Label>
@@ -209,7 +259,6 @@ export function BackgroundManager() {
                 <option value="auto">Auto</option>
               </select>
             </div>
-          </div>
 
           <div>
             <Label htmlFor="background-repeat">Repeat</Label>

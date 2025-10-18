@@ -75,13 +75,15 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized', details: authError?.message }, { status: 401 })
     }
 
-    const { position, size, repeat } = await request.json()
+    const { position, size, repeat, horizontalPosition, verticalPosition } = await request.json()
 
     // Update background positioning in the active background image record
     const { data, error } = await supabaseAdmin
       .from('background_images')
       .update({ 
         background_position: position,
+        horizontal_position: horizontalPosition,
+        vertical_position: verticalPosition,
         background_size: size,
         background_repeat: repeat,
         updated_at: new Date().toISOString()

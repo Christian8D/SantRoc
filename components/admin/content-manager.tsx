@@ -94,14 +94,6 @@ export function ContentManager() {
             disabled={isSaving || isLoadingContent}
             placeholder="Enter your description here. Line breaks and spacing will be preserved on the frontend."
           />
-          {localDescription && (
-            <div className="mt-3 p-3 bg-gray-50 border rounded-lg">
-              <Label className="text-sm font-medium text-gray-600">Preview:</Label>
-              <div className="mt-2 text-sm text-gray-700 whitespace-pre-wrap font-serif">
-                {localDescription}
-              </div>
-            </div>
-          )}
         </div>
 
         <Button 
