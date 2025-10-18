@@ -105,13 +105,13 @@ body {
   width: 120px;
   height: 120px;
   background: 
-    radial-gradient(ellipse 80px 60px at 25% 20%, #ff8c00, transparent 60%),
-    radial-gradient(ellipse 60px 80px at 75% 30%, #32cd32, transparent 55%),
-    radial-gradient(ellipse 70px 50px at 60% 70%, #ff4500, transparent 50%),
-    radial-gradient(ellipse 50px 70px at 30% 80%, #9370db, transparent 45%),
-    radial-gradient(ellipse 90px 40px at 80% 60%, #ffd700, transparent 65%),
-    radial-gradient(ellipse 40px 90px at 15% 60%, #ff1493, transparent 55%),
-    linear-gradient(45deg, #ff6347 0%, #32cd32 15%, #ffd700 30%, #ff1493 45%, #9370db 60%, #ff4500 75%, #00ced1 90%, #ff6347 100%);
+    radial-gradient(ellipse 80px 60px at 25% 20%, #c4a574, transparent 60%),
+    radial-gradient(ellipse 60px 80px at 75% 30%, #8b7355, transparent 55%),
+    radial-gradient(ellipse 70px 50px at 60% 70%, #a67c52, transparent 50%),
+    radial-gradient(ellipse 50px 70px at 30% 80%, #6b5b73, transparent 45%),
+    radial-gradient(ellipse 90px 40px at 80% 60%, #d4af37, transparent 65%),
+    radial-gradient(ellipse 40px 90px at 15% 60%, #8b4513, transparent 55%),
+    linear-gradient(45deg, #c4a574 0%, #8b7355 15%, #d4af37 30%, #a67c52 45%, #6b5b73 60%, #8b4513 75%, #b8860b 90%, #c4a574 100%);
   border-radius: 50%;
   box-shadow: 
     0 8px 25px rgba(0, 0, 0, 0.3),
@@ -128,13 +128,13 @@ body {
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(ellipse 40px 80px at 70% 15%, rgba(255, 165, 0, 0.4), transparent 70%),
-    radial-gradient(ellipse 60px 30px at 20% 75%, rgba(50, 205, 50, 0.3), transparent 60%),
-    radial-gradient(ellipse 50px 60px at 85% 85%, rgba(255, 69, 0, 0.4), transparent 65%),
-    radial-gradient(ellipse 30px 50px at 10% 40%, rgba(147, 112, 219, 0.3), transparent 55%),
-    radial-gradient(ellipse 80px 25px at 50% 10%, rgba(255, 215, 0, 0.3), transparent 60%),
-    radial-gradient(ellipse 25px 70px at 90% 50%, rgba(255, 20, 147, 0.3), transparent 50%),
-    conic-gradient(from 45deg, transparent, rgba(255, 99, 71, 0.4), transparent, rgba(0, 206, 209, 0.3), transparent, rgba(255, 165, 0, 0.4), transparent);
+    radial-gradient(ellipse 40px 80px at 70% 15%, rgba(196, 165, 116, 0.4), transparent 70%),
+    radial-gradient(ellipse 60px 30px at 20% 75%, rgba(139, 115, 85, 0.3), transparent 60%),
+    radial-gradient(ellipse 50px 60px at 85% 85%, rgba(166, 124, 82, 0.4), transparent 65%),
+    radial-gradient(ellipse 30px 50px at 10% 40%, rgba(107, 91, 115, 0.3), transparent 55%),
+    radial-gradient(ellipse 80px 25px at 50% 10%, rgba(212, 175, 55, 0.3), transparent 60%),
+    radial-gradient(ellipse 25px 70px at 90% 50%, rgba(139, 69, 19, 0.3), transparent 50%),
+    conic-gradient(from 45deg, transparent, rgba(196, 165, 116, 0.4), transparent, rgba(139, 115, 85, 0.3), transparent, rgba(212, 175, 55, 0.4), transparent);
   border-radius: 50%;
   animation: psychedelicFlow 12s ease-in-out infinite;
 }
@@ -147,10 +147,10 @@ body {
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(ellipse 35px 65px at 60% 25%, rgba(255, 20, 147, 0.2), transparent 60%),
-    radial-gradient(ellipse 55px 35px at 30% 85%, rgba(255, 215, 0, 0.2), transparent 55%),
-    radial-gradient(ellipse 45px 55px at 80% 70%, rgba(50, 205, 50, 0.2), transparent 50%),
-    radial-gradient(ellipse 65px 40px at 15% 60%, rgba(255, 69, 0, 0.2), transparent 65%);
+    radial-gradient(ellipse 35px 65px at 60% 25%, rgba(139, 69, 19, 0.2), transparent 60%),
+    radial-gradient(ellipse 55px 35px at 30% 85%, rgba(212, 175, 55, 0.2), transparent 55%),
+    radial-gradient(ellipse 45px 55px at 80% 70%, rgba(139, 115, 85, 0.2), transparent 50%),
+    radial-gradient(ellipse 65px 40px at 15% 60%, rgba(196, 165, 116, 0.2), transparent 65%);
   border-radius: 50%;
   animation: psychedelicFlow 12s ease-in-out infinite reverse;
 }
@@ -242,9 +242,9 @@ body {
   width: 35px;
   height: 35px;
   background: 
-    radial-gradient(circle at 20% 20%, #ffd700, transparent 40%),
-    radial-gradient(circle at 80% 80%, #ff69b4, transparent 40%),
-    linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #667eea);
+    radial-gradient(circle at 20% 20%, #d4af37, transparent 40%),
+    radial-gradient(circle at 80% 80%, #a67c52, transparent 40%),
+    linear-gradient(45deg, #c4a574, #8b7355, #d4af37, #6b5b73);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -252,7 +252,7 @@ body {
   box-shadow: 
     0 2px 8px rgba(0, 0, 0, 0.4),
     inset 0 1px 2px rgba(255, 255, 255, 0.3),
-    0 0 15px rgba(255, 107, 107, 0.6);
+    0 0 15px rgba(196, 165, 116, 0.6);
 }
 
 .lp-label {
