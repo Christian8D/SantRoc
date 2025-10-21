@@ -461,4 +461,141 @@ body {
   z-index: 1;
 }
 
+/* Psychedelic About Button */
+.psychedelic-about-button {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.psychedelic-about-button:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    0 6px 18px rgba(0, 0, 0, 0.4),
+    inset 0 0 12px rgba(255, 255, 255, 0.15);
+}
+
+.button-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.button-text {
+  font-size: 48px;
+  font-weight: 300;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  z-index: 3;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.psychedelic-bg-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(ellipse 80px 60px at 25% 20%, rgba(212, 175, 55, 0.3), transparent 60%),
+    radial-gradient(ellipse 60px 80px at 75% 30%, rgba(184, 134, 11, 0.25), transparent 55%),
+    radial-gradient(ellipse 70px 50px at 60% 70%, rgba(196, 165, 116, 0.3), transparent 50%),
+    radial-gradient(ellipse 50px 70px at 30% 80%, rgba(139, 115, 85, 0.25), transparent 45%),
+    radial-gradient(ellipse 90px 40px at 80% 60%, rgba(212, 175, 55, 0.3), transparent 65%),
+    radial-gradient(ellipse 40px 90px at 15% 60%, rgba(184, 134, 11, 0.25), transparent 55%),
+    linear-gradient(45deg, rgba(212, 175, 55, 0.15) 0%, rgba(184, 134, 11, 0.2) 15%, rgba(196, 165, 116, 0.15) 30%, rgba(139, 115, 85, 0.2) 45%, rgba(212, 175, 55, 0.15) 60%, rgba(184, 134, 11, 0.2) 75%, rgba(196, 165, 116, 0.15) 90%, rgba(212, 175, 55, 0.15) 100%);
+  border-radius: 6px;
+  animation: psychedelicWaves 8s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes psychedelicWaves {
+  0%, 100% {
+    background:
+      radial-gradient(ellipse 80px 60px at 25% 20%, rgba(212, 175, 55, 0.3), transparent 60%),
+      radial-gradient(ellipse 60px 80px at 75% 30%, rgba(184, 134, 11, 0.25), transparent 55%),
+      radial-gradient(ellipse 70px 50px at 60% 70%, rgba(196, 165, 116, 0.3), transparent 50%),
+      radial-gradient(ellipse 50px 70px at 30% 80%, rgba(139, 115, 85, 0.25), transparent 45%),
+      radial-gradient(ellipse 90px 40px at 80% 60%, rgba(212, 175, 55, 0.3), transparent 65%),
+      radial-gradient(ellipse 40px 90px at 15% 60%, rgba(184, 134, 11, 0.25), transparent 55%),
+      linear-gradient(45deg, rgba(212, 175, 55, 0.15) 0%, rgba(184, 134, 11, 0.2) 15%, rgba(196, 165, 116, 0.15) 30%, rgba(139, 115, 85, 0.2) 45%, rgba(212, 175, 55, 0.15) 60%, rgba(184, 134, 11, 0.2) 75%, rgba(196, 165, 116, 0.15) 90%, rgba(212, 175, 55, 0.15) 100%);
+    filter: hue-rotate(0deg) brightness(1) saturate(1.1);
+  }
+  25% {
+    filter: hue-rotate(15deg) brightness(1.05) saturate(1.2);
+  }
+  50% {
+    filter: hue-rotate(30deg) brightness(1.1) saturate(1.3);
+  }
+  75% {
+    filter: hue-rotate(15deg) brightness(1.05) saturate(1.2);
+  }
+}
+
+/* Expanding Content Animation */
+.expanding-content {
+  position: relative;
+  overflow: hidden;
+}
+
+.expand-hidden {
+  opacity: 0;
+  transform: scaleX(0) scaleY(0);
+  transform-origin: center;
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+}
+
+.expand-visible {
+  opacity: 1;
+  transform: scaleX(1) scaleY(1);
+  transform-origin: center;
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: auto;
+}
+
+.expand-visible::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+  transform: translateX(-50%);
+  animation: expandFromCenter 0.8s ease-out forwards;
+  z-index: -1;
+}
+
+@keyframes expandFromCenter {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  50% {
+    width: 100%;
+    opacity: 0.3;
+  }
+  100% {
+    width: 100%;
+    opacity: 0;
+  }
+}
+
 

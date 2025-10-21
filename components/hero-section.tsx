@@ -87,8 +87,8 @@ export function HeroSection() {
 
       {/* Content Layer */}
       <div className="relative z-10 container mx-auto px-4 py-32 text-center min-h-screen" style={{ zIndex: 4 }}>
-        {/* LP Button - Centered in the middle of the page */}
-        {!isDescriptionVisible && (
+        {/* LP Button - Centered in the middle of the page - COMMENTED OUT FOR FUTURE USE */}
+        {/* {!isDescriptionVisible && (
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <button
               onClick={() => setIsDescriptionVisible(true)}
@@ -110,32 +110,49 @@ export function HeroSection() {
               </div>
             </button>
           </div>
+        )} */}
+
+        {/* New Psychedelic About Button - Centered in the middle of the page */}
+        {!isDescriptionVisible && (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <button
+              onClick={() => setIsDescriptionVisible(true)}
+              className="psychedelic-about-button animate-fadeIn"
+            >
+              <div className="button-content">
+                <span className="button-text">+</span>
+                <div className="psychedelic-bg-effect"></div>
+              </div>
+            </button>
+          </div>
         )}
 
         {/* Title at top */}
         <h1 className="groovy-title text-7xl md:text-9xl text-vintage-tan pt-16">{heroTitle}</h1>
 
-        {/* Description Content - Appears above button when toggled */}
-        <div className={`max-w-3xl mx-auto description-sunburst backdrop-blur-sm p-8 md:p-12 rounded-lg shadow-2xl mb-8 transition-all duration-[2000ms] ease-in-out relative ${
+        {/* Description Content - Expands from button when toggled */}
+        <div className={`expanding-content relative ${
           isDescriptionVisible 
-            ? 'opacity-100 translate-y-0 scale-100' 
-            : 'opacity-0 translate-y-8 scale-95 pointer-events-none'
+            ? 'expand-visible' 
+            : 'expand-hidden'
         }`}>
-          {/* Close Button - Top Right Corner */}
-          {isDescriptionVisible && (
-            <button
-              onClick={() => setIsDescriptionVisible(false)}
-              className="absolute top-4 right-4 bg-vintage-dark/20 hover:bg-vintage-dark/40 text-vintage-dark rounded-full p-2 transition-all duration-300 hover:scale-110"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          )}
-          
-          <div className="text-overlay">
-            <div 
-              className="text-vintage-dark text-lg md:text-xl leading-relaxed font-serif whitespace-pre-wrap relative z-10"
-            >
-              {heroDescription}
+          <div className="max-w-3xl mx-auto description-sunburst backdrop-blur-sm p-8 md:p-12 rounded-lg shadow-2xl mb-8">
+            {/* Close Button - Top Right Corner */}
+            {isDescriptionVisible && (
+              <button
+                onClick={() => setIsDescriptionVisible(false)}
+                className="absolute top-4 right-4 bg-white/90 hover:bg-white text-vintage-dark rounded-full p-3 transition-all duration-300 hover:scale-110 shadow-lg border-2 border-vintage-tan/50 z-50"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            )}
+            
+            <div className="text-overlay">
+              <div 
+                className="text-vintage-dark text-lg md:text-xl leading-relaxed font-serif whitespace-pre-wrap relative z-10"
+              >
+                {heroDescription}
+              </div>
             </div>
           </div>
         </div>
