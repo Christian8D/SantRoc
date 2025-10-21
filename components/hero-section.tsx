@@ -12,10 +12,37 @@ export function HeroSection() {
     backgroundRepeat,
     heroTitle, 
     heroDescription, 
+    events,
     isLoading 
   } = useContent()
 
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false)
+
+  // Get the closest upcoming event
+  const getClosestUpcomingEvent = () => {
+    if (!events || events.length === 0) return null
+    
+    const today = new Date()
+    today.setHours(0, 0, 0, 0) // Reset time to start of day
+    
+    const upcomingEvents = events.filter(event => {
+      if (!event.event_date) return false
+      const eventDate = new Date(event.event_date)
+      eventDate.setHours(0, 0, 0, 0)
+      return eventDate >= today
+    })
+    
+    if (upcomingEvents.length === 0) return null
+    
+    // Sort by date and return the closest one
+    return upcomingEvents.sort((a, b) => {
+      const dateA = new Date(a.event_date!)
+      const dateB = new Date(b.event_date!)
+      return dateA.getTime() - dateB.getTime()
+    })[0]
+  }
+
+  const closestEvent = getClosestUpcomingEvent()
 
   // Debug logging
   console.log('Background image URL:', backgroundImage)
@@ -112,6 +139,37 @@ export function HeroSection() {
             </div>
           </div>
         </div>
+
+        {/* Closest Upcoming Event - Bottom of hero section */}
+        {closestEvent && (
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4">
+            <div className="bg-vintage-dark/20 backdrop-blur-sm border border-vintage-tan/30 rounded-lg p-6 shadow-lg">
+              <div className="text-center">
+                <h2 className="text-2xl md:text-3xl font-serif text-vintage-tan mb-2">
+                  {closestEvent.title}
+                </h2>
+                {closestEvent.description && (
+                  <p className="text-vintage-cream text-lg mb-3">
+                    {closestEvent.description}
+                  </p>
+                )}
+                {closestEvent.event_date && (
+                  <div className="text-vintage-tan font-medium">
+                    {new Date(closestEvent.event_date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: 'numeric',
+                      minute: '2-digit',
+                      hour12: true
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   )
