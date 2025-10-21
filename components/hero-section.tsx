@@ -127,8 +127,17 @@ export function HeroSection() {
           </div>
         )}
 
+        {/* Logo at top - COMMENTED OUT FOR FUTURE USE */}
+        <div className="mb-40 flex justify-center">
+          <img 
+            src="/sant-roc-logo.png" 
+            alt="Sant Roc" 
+            className="max-w-sm md:max-w-xl lg:max-w-2xl h-auto"
+          />
+        </div>
+
         {/* Title at top */}
-        <h1 className="groovy-title text-7xl md:text-9xl text-vintage-tan pt-16">{heroTitle}</h1>
+        {/* <h1 className="groovy-title text-7xl md:text-9xl text-vintage-tan pt-16">{heroTitle}</h1> */}
 
         {/* Description Content - Expands from button when toggled */}
         <div className={`expanding-content relative ${
