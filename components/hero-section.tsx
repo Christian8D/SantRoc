@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { useContent } from "@/lib/content-context"
 import { ChevronDown, ChevronUp, X } from "lucide-react"
 
@@ -169,7 +169,7 @@ export function HeroSection() {
         {/* Closest Upcoming Event - Bottom of hero section */}
         {closestEvent && (
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4">
-            <div className="bg-vintage-dark/20 backdrop-blur-sm border border-vintage-tan/30 rounded-lg p-6 shadow-lg">
+            <div className="mb-32 bg-vintage-dark/20 backdrop-blur-sm border border-vintage-tan/30 rounded-lg p-6 shadow-lg">
               <div className="text-center">
                 <h2 className="text-2xl md:text-3xl font-serif text-vintage-tan mb-2">
                   {closestEvent.title}
