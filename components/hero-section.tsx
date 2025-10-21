@@ -140,9 +140,9 @@ export function HeroSection() {
         {/* <h1 className="groovy-title text-7xl md:text-9xl text-vintage-tan pt-16">{heroTitle}</h1> */}
 
         {/* Description Content - Expands from button when toggled */}
-        <div className={`expanding-content relative ${
+        <div className={`expanding-content relative flex justify-center ${
           isDescriptionVisible 
-            ? 'expand-visible' 
+            ? 'expand-visible z-50' 
             : 'expand-hidden'
         }`}>
           <div className="max-w-3xl mx-auto description-sunburst backdrop-blur-sm p-8 md:p-12 rounded-lg shadow-2xl mb-8">
