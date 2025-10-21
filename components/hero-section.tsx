@@ -117,9 +117,9 @@ export function HeroSection() {
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <button
               onClick={() => setIsDescriptionVisible(true)}
-              className="psychedelic-about-button animate-fadeIn"
+              className="psychedelic-about-button animate-fadeIn mt-25"
             >
-              <div className="button-content">
+              <div className="button-content ">
                 <span className="button-text">+</span>
                 <div className="psychedelic-bg-effect"></div>
               </div>
