@@ -799,14 +799,7 @@ nextjs-portal {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: all 0.3s ease;
-  mask-image: url('/Cassette-santroc.png');
-  -webkit-mask-image: url('/Cassette-santroc.png');
-  mask-size: contain;
-  -webkit-mask-size: contain;
-  mask-position: center;
-  -webkit-mask-position: center;
-  mask-repeat: no-repeat;
-  -webkit-mask-repeat: no-repeat;
+  z-index: 1;
 }
 
 .music-link-card:hover .music-link-blur-overlay {
