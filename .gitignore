@@ -9,6 +9,7 @@
 
 # production
 /build
+/refactored
 
 # debug
 npm-debug.log*
