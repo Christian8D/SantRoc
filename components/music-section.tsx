@@ -41,7 +41,7 @@ export function MusicSection() {
                 href={link.url}
                 className="block p-6 music-link-card rounded-lg transition-all hover:scale-105 relative overflow-hidden group"
               >
-                <div className="music-link-bg absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="music-link-blur-overlay absolute inset-0"></div>
                 <h3 className="text-2xl font-serif text-center underline decoration-2 underline-offset-4 relative z-10 music-link-text">
                   {link.title}
                 </h3>
@@ -68,7 +68,7 @@ export function MusicSection() {
                 href={link.url}
                 className="block p-6 music-link-card rounded-lg transition-all hover:scale-105 relative overflow-hidden group"
               >
-                <div className="music-link-bg absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="music-link-blur-overlay absolute inset-0"></div>
                 <h3 className="text-2xl font-serif text-center underline decoration-2 underline-offset-4 relative z-10 music-link-text">
                   {link.title}
                 </h3>
