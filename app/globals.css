@@ -794,12 +794,28 @@ nextjs-portal {
   transform: scale(1.05) rotateX(2deg) rotateY(-2deg);
 }
 
+.music-link-image-wrapper {
+  background-image: url('/Cassette-santroc.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 1;
+  mask-image: url('/Cassette-santroc.png');
+  -webkit-mask-image: url('/Cassette-santroc.png');
+  mask-size: contain;
+  -webkit-mask-size: contain;
+  mask-position: center;
+  -webkit-mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+}
+
 .music-link-blur-overlay {
   background: rgba(245, 239, 230, 0.2);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: all 0.3s ease;
-  z-index: 1;
 }
 
 .music-link-card:hover .music-link-blur-overlay {
